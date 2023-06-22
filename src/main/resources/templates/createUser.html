@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<body>
+<h2>Create new User page</h2>
+
+<form th:method="POST" th:action="@{/admin/saveUser}" th:object="${user}">
+
+    <input type="hidden" th:field="*{id}" id="id"/>
+    <!--    <input type="hidden" th:field="*{password}" id="password"/>-->
+
+    <label for="name">Name</label>
+    <input type="text" th:field="*{username}" id="name"/>
+
+    <br>
+
+    <label for="password">Password</label>
+    <input type="password" th:field="*{password}" id="password"/>
+
+    <br>
+
+    <label for="email">Email</label>
+    <input type="text" th:field="*{email}" id="email"/>
+
+    <br>
+
+    <label for="birthday">Birthday</label>
+    <input type="text" th:field="*{birthday}" id="birthday"/>
+
+    <br>
+
+    <input type="submit" value="Create"/>
+
+</form>
+
+
+
+</body>
+
+
+</html>

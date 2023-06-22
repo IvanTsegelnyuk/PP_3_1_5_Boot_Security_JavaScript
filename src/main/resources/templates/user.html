@@ -4,7 +4,49 @@
     <title>Spring Security Example</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<h1 th:with="loginUser=${userModel.getUsername()}">Домашняя страница пользователя <span th:text="${loginUser}"></span></h1>
+<!--<h1>User, welcome spring boot security page!</h1>-->
+
+<table>
+
+    <tr>
+        <td>Name:</td>
+        <td th:text="${userModel.getUsername()}"/>
+    </tr>
+    <tr>
+        <td>Email:</td>
+        <td th:text="${userModel.getEmail()}"/>
+    </tr>
+    <tr>
+        <td>Birthday:</td>
+        <td th:text="${userModel.getBirthday()}"/>
+    </tr>
+
+
+
+</table>
+
+<br>
+
+<table>
+
+    <tr th:each="iter,iterStat : ${userModel.getRoles()}">
+        <td th:text="${iterStat.index + 1}"></td>
+        <td th:text="${iter}"></td>
+    </tr>
+
+</table>
+
+<br>
+
+<input type="button" value="Logout" onclick="window.location.href ='/logout'"/>
+
+<br>
+
+<form th:method="post" action="/logout">
+<!--    <input type="submit" value="LogOut"/>-->
+</form>
+
 
 
 </body>
