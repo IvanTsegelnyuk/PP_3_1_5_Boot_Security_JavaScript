@@ -2,36 +2,23 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.Role;
+import ru.kata.spring.boot_security.demo.models.ConfirmPassword;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
-
-import java.security.Principal;
-import java.util.Set;
-
-//import ru.ivan.pp_3_1_2_spring_boot.models.User;
-//import ru.ivan.pp_3_1_2_spring_boot.service.UserService;
 
 @Controller
 @RequestMapping("/")
 public class MainController {
 
     @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @Autowired
     UserService userService;
 
     @GetMapping("/")
     public String defaultPage(ModelMap model, @AuthenticationPrincipal User user) {
-        System.out.println(user.getEmail());
         model.addAttribute("userModel", user);
         return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")) ? helloAdmin(model) : helloUser(model, user);
     }
@@ -44,8 +31,6 @@ public class MainController {
 
     @GetMapping("/user")
     public String helloUser(ModelMap model, @AuthenticationPrincipal User user) {
-        System.out.println(user.getEmail());
-//        model.addAttribute("user", userService.getAllUsers());
         model.addAttribute("userModel", user);
         return "user";
     }
@@ -64,24 +49,9 @@ public class MainController {
         return "addUser";
     }
 
-//    @PostMapping("/admin/saveUser")
-//    public String saveUser(@ModelAttribute("user") User user) {
-//        user.setRoles(Set.of(new Role(2)));
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-//        userService.add(user);
-//
-////        userService.updateUser(user.getId(), user.getUsername(), user.getEmail(), user.getBirthday());
-//        return "redirect:/admin";
-//    }
-
     @PostMapping("/admin/saveUser")
     public String saveUser(ModelMap model, User newUser) {
-        System.out.println("Выполнение метода добавления пользователя");
-        newUser = (User) model.getAttribute("user");
-        newUser.setRoles(Set.of(new Role(2)));
-        newUser.setPassword(bCryptPasswordEncoder.encode(newUser.getPassword()));
         userService.add(newUser);
-        System.out.println("Конец метода добавления пользователя");
         return "redirect:/admin";
     }
 
@@ -93,9 +63,37 @@ public class MainController {
     }
 
     @GetMapping ("/admin/updateUser/{id}")
-    public String updateUser(@PathVariable int id, Model model) {
+    public String updateUser(@PathVariable int id, ModelMap model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
-        return "addUser";
+        return "updateUser";
+    }
+
+    @PostMapping("/admin/updateUser")
+    public String updateUserData(User user) {
+        userService.updateUser(user.getId(), user.getUsername(), user.getEmail(), user.getBirthday());
+        return "redirect:/admin";
+    }
+
+    @GetMapping("/admin/changePassword/{id}")
+    public String changePassword(@PathVariable int id, ModelMap model) {
+        model.addAttribute("confirmPassword", new ConfirmPassword(id, userService.getUserById(id).getUsername()));
+        return "changePassword";
+    }
+
+    @GetMapping("/admin/changePassword/error")
+    public String changePassword(@RequestParam("id") int id, @ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
+        confirmPassword.setId(id);
+        confirmPassword.setUserName(userService.getUserById(id).getUsername());
+        return "passwordsDoNotMatch";
+    }
+
+    @PostMapping("/admin/changePassword")
+    public String changePassword(@ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
+        if (confirmPassword.getPassword().equals(confirmPassword.getConfirmPassword())) {
+            userService.updatePasswordById(confirmPassword.getId(), confirmPassword.getPassword());
+            return "redirect:/admin";
+        }
+        else return "redirect:/admin/changePassword/error?id=" + confirmPassword.getId();
     }
 }

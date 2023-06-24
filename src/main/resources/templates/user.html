@@ -10,6 +10,11 @@
 <table>
 
     <tr>
+        <td>ID:</td>
+        <td th:text="${userModel.getId()}"/>
+    </tr>
+
+    <tr>
         <td>Name:</td>
         <td th:text="${userModel.getUsername()}"/>
     </tr>
@@ -43,7 +48,7 @@
 
 <br>
 
-<form th:method="post" action="/logout">
+<!--<form th:method="post" action="/logout">-->
 <!--    <input type="submit" value="LogOut"/>-->
 </form>
 

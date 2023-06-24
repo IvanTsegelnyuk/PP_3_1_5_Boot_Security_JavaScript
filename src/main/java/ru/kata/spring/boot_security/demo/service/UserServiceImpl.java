@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 //import ru.kata.spring.boot_security.demo.dao.UserDao;
@@ -21,23 +22,22 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-//    @Autowired
-//    private UserDao userDao;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     @Transactional
     public void removeUser(User user) {
-//        userDao.removeUser(user);
         userRepository.delete(user);
     }
 
     @Override
     @Transactional
     public void add(User user) {
-//        userDao.createUser(user);
-//        user.setRoles(Set.of(new Role(2), new Role(1)));
+        user.setRoles(Set.of(new Role(2)));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.saveAndFlush(user);
     }
 
@@ -50,30 +50,24 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public List<User> getAllUsers() {
-//        return userDao.getAllUsers();
         return userRepository.findAll();
     }
 
     @Override
     @Transactional
     public User getUserById(int id) {
-        //return userDao.getUserById(id);
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
-//    @Override
-//    @Transactional
-//    @Query(value = "from User where username=:param")
-//    public User findUserByUsername(@Param("param") String username) {
-//
-//    }
 
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByUsername(username);
-//        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), user.getAuthorities());
-        return user;
+        return userRepository.findUserByUsername(username);
+    }
+    @Override
+    @Transactional
+    public void updatePasswordById(int id, String password) {
+        userRepository.updateUserPassword(id, bCryptPasswordEncoder.encode(password));
     }
 }

@@ -1,18 +1,4 @@
-//package ru.kata.spring.boot_security.demo.models;
-//
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//
-//public enum Role implements GrantedAuthority {
-//    ADMIN, USER;
-//
-//    @Override
-//    public String getAuthority() {
-//        return this.name();
-//    }
-//
-//
-//}
+
 package ru.kata.spring.boot_security.demo.models;
 
 import jakarta.persistence.*;
@@ -26,13 +12,8 @@ public class Role implements GrantedAuthority {
     @Id
     private int id;
 
-
     private String name;
 
-//    @Column
-//    private String role;
-
-//    @Transient
     @ManyToMany(mappedBy = "roles")
     private Set<User> users;
 
@@ -68,14 +49,6 @@ public class Role implements GrantedAuthority {
     public void setName(String name) {
         this.name = name;
     }
-
-//    public String getRole() {
-//        return role;
-//    }
-
-//    public void setRole(String role) {
-//        this.role = role;
-//    }
 
     public Set<User> getUsers() {
         return users;

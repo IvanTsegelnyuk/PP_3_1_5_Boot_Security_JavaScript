@@ -4,10 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.LogoutConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
@@ -18,6 +16,7 @@ import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 @EnableWebSecurity
 public class WebSecurityConfig {
 
+    @Autowired
     private final UserServiceImpl userServiceImpl;
 
     @Autowired
@@ -35,12 +34,11 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user/**").hasRole("USER"))
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/").authenticated())
                 .formLogin(x -> x.successHandler(successHandler));
-//                .logout(logout -> logout.logoutUrl("/logout"));
         return http.build();
     }
 
     @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    public static BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder(12);
     }
 

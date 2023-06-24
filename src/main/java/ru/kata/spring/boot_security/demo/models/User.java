@@ -1,31 +1,19 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-//import javax.persistence.Entity;
-//import javax.persistence.GeneratedValue;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
 
 @Entity
-//@DynamicUpdate
 @Table(name = "people")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-//    @Column
-//    private String name;
 
     @Column
     private String email;
@@ -36,8 +24,6 @@ public class User implements UserDetails {
 
 
     @ManyToMany(fetch = FetchType.LAZY)
-//    @JoinTable(name = "people_roles", joinColumns = @JoinColumn(name = "users_id"),
-//                inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Set<Role> roles;
 
     @Column
@@ -46,13 +32,7 @@ public class User implements UserDetails {
     @Column
     private String password;
 
-//    private boolean accountExpired;
-//
-//    private boolean accountLocked;
-//
-//    private boolean credentialsExpired;
-//
-//    private boolean enabled;
+    private String confirmPassword;
 
     public User(String name, String email, String birthday) {
         this.username = name;
@@ -60,26 +40,19 @@ public class User implements UserDetails {
         this.birthday = birthday;
     }
 
-    public User(int id, String email, String birthday, Set<Role> roles, String username, String password) {
+    public User(int id, String email, String birthday, Set<Role> roles, String username, String password, String confirmPassword) {
         this.id = id;
         this.email = email;
         this.birthday = birthday;
         this.roles = roles;
         this.username = username;
         this.password = password;
+        this.confirmPassword = confirmPassword;
     }
 
     public User() {
 
     }
-
-//    public String getName() {
-//        return name;
-//    }
-
-//    public void setName(String name) {
-//        this.name = name;
-//    }
 
     public String getEmail() {
         return email;
@@ -123,13 +96,20 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return roles.stream().map(p -> new SimpleGrantedAuthority(p.getName())).collect(Collectors.toList());
         return roles;
     }
 
     @Override
     public String getPassword() {
         return password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
     @Override
