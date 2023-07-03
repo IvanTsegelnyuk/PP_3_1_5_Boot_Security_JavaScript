@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import ru.kata.spring.boot_security.demo.service.RoleServiceImpl;
 import ru.kata.spring.boot_security.demo.service.UserServiceImpl;
 
 
@@ -43,10 +42,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder(12);
     }
 
-//    @Bean
-//    public static RoleServiceImpl getRoleServiceImpl() {
-//        return new RoleServiceImpl();
-//    }
 
     @Bean
     protected DaoAuthenticationProvider daoAuthenticationProvider() {
