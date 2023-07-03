@@ -29,8 +29,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void add(User user) {
-//        String role = user.getRolesAsInt();
-//        user.setRoles(Set.of(new Role(Integer.parseInt(role))));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.saveAndFlush(user);
     }
@@ -64,11 +62,5 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findUserByUsername(email);
-    }
-
-    @Override
-    @Transactional
-    public void updatePasswordById(int id, String password) {
-        userRepository.updateUserPassword(id, bCryptPasswordEncoder.encode(password));
     }
 }

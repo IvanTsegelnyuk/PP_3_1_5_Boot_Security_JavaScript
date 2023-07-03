@@ -17,9 +17,6 @@ public interface UserService {
 
     User getUserById(int id);
 
-//    void updateUser(int id, String username, String email, String birthday);
     void updateUser(User user);
-
-    void updatePasswordById(int id, String password);
 
 }

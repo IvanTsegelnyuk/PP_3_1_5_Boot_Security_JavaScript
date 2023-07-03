@@ -25,36 +25,14 @@ public class User implements UserDetails {
     @Column
     private int age;
 
-//    @Transient
-//    private String rolesAsInt;
-
-//    public String getRolesAsInt() {
-//        return rolesAsInt;
-//    }
-
-//    public void setRolesAsInt(String rolesAsInt) {
-//        this.rolesAsInt = rolesAsInt;
-//    }
-
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
-
-//    @ManyToMany(cascade = CascadeType.MERGE , fetch = FetchType.LAZY)
-//    @Fetch(FetchMode.JOIN)
-//    @JoinTable(
-//            name = "users_roles",
-//            joinColumns = @JoinColumn(name = "users_id"),
-//            inverseJoinColumns = @JoinColumn(name = "roles_id")
-//    )
-//    private Set<Role> roles;
 
     @Column
     private String username;
 
     @Column
     private String password;
-
-//    private String confirmPassword;
 
     public User(String name, String email, String LastName) {
         this.username = name;
@@ -69,7 +47,6 @@ public class User implements UserDetails {
         this.roles = roles;
         this.username = username;
         this.password = password;
-//        this.confirmPassword = confirmPassword;
         this.age = age;
     }
 
@@ -142,14 +119,6 @@ public class User implements UserDetails {
     public String getPassword() {
         return password;
     }
-
-//    public String getConfirmPassword() {
-//        return confirmPassword;
-//    }
-
-//    public void setConfirmPassword(String confirmPassword) {
-//        this.confirmPassword = confirmPassword;
-//    }
 
     @Override
     public String getUsername() {
