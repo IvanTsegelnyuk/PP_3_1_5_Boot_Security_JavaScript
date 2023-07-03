@@ -1,10 +1,14 @@
 package ru.kata.spring.boot_security.demo.models;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -21,9 +25,30 @@ public class User implements UserDetails {
     @Column
     private String birthday;
 
+    @Column
+    private int age;
 
+    @Transient
+    private String rolesAsInt;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    public String getRolesAsInt() {
+        return rolesAsInt;
+    }
+
+    public void setRolesAsInt(String rolesAsInt) {
+        this.rolesAsInt = rolesAsInt;
+    }
+
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    private Set<Role> roles;
+
+    @ManyToMany(cascade = CascadeType.MERGE , fetch = FetchType.LAZY)
+    @Fetch(FetchMode.JOIN)
+    @JoinTable(
+            name = "people_roles",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "roles_id")
+    )
     private Set<Role> roles;
 
     @Column
@@ -40,7 +65,7 @@ public class User implements UserDetails {
         this.birthday = birthday;
     }
 
-    public User(int id, String email, String birthday, Set<Role> roles, String username, String password, String confirmPassword) {
+    public User(int id, String email, String birthday, Set<Role> roles, String username, String password, String confirmPassword, int age) {
         this.id = id;
         this.email = email;
         this.birthday = birthday;
@@ -48,10 +73,19 @@ public class User implements UserDetails {
         this.username = username;
         this.password = password;
         this.confirmPassword = confirmPassword;
+        this.age = age;
     }
 
     public User() {
 
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public String getEmail() {
@@ -80,6 +114,14 @@ public class User implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public String printRoles() {
+        StringBuilder sb = new StringBuilder();
+        for (Role role: getRoles().stream().sorted(Comparator.comparing(Role::getName)).toList()) {
+            sb.append(role.getName().substring(5)).append(" ");
+        }
+        return sb.toString().trim();
     }
 
     public void setRoles(Set<Role> roles) {

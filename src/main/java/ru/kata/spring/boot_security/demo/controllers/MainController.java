@@ -8,6 +8,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.ConfirmPassword;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @Controller
@@ -17,28 +18,47 @@ public class MainController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    RoleService roleService;
+
     @GetMapping("/")
     public String defaultPage(ModelMap model, @AuthenticationPrincipal User user) {
         model.addAttribute("userModel", user);
-        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")) ? helloAdmin(model) : helloUser(model, user);
+        return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")) ? helloAdmin(model, user) : helloUser(model, user);
     }
 
+//    @PostMapping("/test")
+//    public String test(ModelMap model, User user) {
+//        model.addAttribute("testModelForm", user);
+//        return "users";
+//    }
+
     @GetMapping("/admin")
-    public String helloAdmin(ModelMap model) {
+    public String helloAdmin(ModelMap model, @AuthenticationPrincipal User user) {
+//        User updatedUser = new User();
+        model.addAttribute("adminInfo", user);
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("roles", roleService.getAllRoles());
+//        model.addAttribute("updatedUser", updatedUser);
+//        model.addAttribute("user", new User());
+//        model.addAttribute("user", user);
+//        System.out.println(model.getAttribute("adminInfo"));
         return "users";
     }
 
     @GetMapping("/user")
     public String helloUser(ModelMap model, @AuthenticationPrincipal User user) {
         model.addAttribute("userModel", user);
+//        model.addAttribute("loginUser", )
         return "user";
     }
 
     @GetMapping("/admin/createUser")
-    public String createUser(ModelMap model) {
+    public String createUser(ModelMap model, @AuthenticationPrincipal User loggedOnUser) {
         User user = new User();
         model.addAttribute("user", user);
+        model.addAttribute("loggedOnUser", loggedOnUser);
+        model.addAttribute("roles", roleService.getAllRoles());
         return "createUser";
     }
 
@@ -50,30 +70,52 @@ public class MainController {
     }
 
     @PostMapping("/admin/saveUser")
-    public String saveUser(ModelMap model, User newUser) {
-        userService.add(newUser);
+    public String saveUser(@ModelAttribute("user") User newUser) {
+//    public String saveUser(ModelMap model, User newUser) {
+//        System.out.println(newUser.getRolesAsString());
+//        System.out.println(newUser.getRolesAsInt());
+//        userService.add(newUser);
+        userService.updateUser(newUser);
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/removeUser/{id}")
-    public String removeUser(@PathVariable int id) {
-        User user = userService.getUserById(id);
+//    @GetMapping("/admin/removeUser/{id}")
+//    public String removeUser(@PathVariable int id) {
+//        User user = userService.getUserById(id);
+//        userService.removeUser(user);
+//        return "redirect:/admin";
+//    }
+
+    @PostMapping("/admin/removeUser/{id}")
+    public String removeUser(@ModelAttribute("iter") User user) {
+        System.out.println("Удаление пользователя");
+//        User deletedUser = userService.getUserById(user.getId());
         userService.removeUser(user);
         return "redirect:/admin";
     }
 
-    @GetMapping ("/admin/updateUser/{id}")
-    public String updateUser(@PathVariable int id, ModelMap model) {
-        User user = userService.getUserById(id);
-        model.addAttribute("user", user);
-        return "updateUser";
-    }
+//    @GetMapping ("/admin/updateUser/{id}")
+//    public String updateUser(@PathVariable int id, ModelMap model) {
+//        System.out.println("Обновление пользователя");
+//        User user = userService.getUserById(id);
+//        model.addAttribute("user", user);
+//        return "updateUser";
+//    }
 
-    @PostMapping("/admin/updateUser")
-    public String updateUserData(User user) {
-        userService.updateUser(user.getId(), user.getUsername(), user.getEmail(), user.getBirthday());
+    @PostMapping ("/admin/updateUser/{id}")
+    public String updateUser(@ModelAttribute("iter") User user) {
+        System.out.println("Обновление пользователя");
+//        User user = userService.getUserById(id);
+//        model.addAttribute("user", user);
+        userService.updateUser(user);
         return "redirect:/admin";
     }
+
+//    @PostMapping("/admin/updateUser")
+//    public String updateUserData(User user) {
+//        userService.updateUser(user.getId(), user.getUsername(), user.getEmail(), user.getBirthday());
+//        return "redirect:/admin";
+//    }
 
     @GetMapping("/admin/changePassword/{id}")
     public String changePassword(@PathVariable int id, ModelMap model) {
