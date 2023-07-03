@@ -27,22 +27,11 @@ public class MainController {
         return user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN")) ? helloAdmin(model, user) : helloUser(model, user);
     }
 
-//    @PostMapping("/test")
-//    public String test(ModelMap model, User user) {
-//        model.addAttribute("testModelForm", user);
-//        return "users";
-//    }
-
     @GetMapping("/admin")
     public String helloAdmin(ModelMap model, @AuthenticationPrincipal User user) {
-//        User updatedUser = new User();
         model.addAttribute("adminInfo", user);
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getAllRoles());
-//        model.addAttribute("updatedUser", updatedUser);
-//        model.addAttribute("user", new User());
-//        model.addAttribute("user", user);
-//        System.out.println(model.getAttribute("adminInfo"));
         return "users";
     }
 
@@ -62,19 +51,15 @@ public class MainController {
         return "createUser";
     }
 
-    @GetMapping("/admin/addNewUser")
-    public String addNewUser(ModelMap model) {
-        User user = new User();
-        model.addAttribute("user", user);
-        return "addUser";
-    }
+//    @GetMapping("/admin/addNewUser")
+//    public String addNewUser(ModelMap model) {
+//        User user = new User();
+//        model.addAttribute("user", user);
+//        return "addUser";
+//    }
 
     @PostMapping("/admin/saveUser")
     public String saveUser(@ModelAttribute("user") User newUser) {
-//    public String saveUser(ModelMap model, User newUser) {
-//        System.out.println(newUser.getRolesAsString());
-//        System.out.println(newUser.getRolesAsInt());
-//        userService.add(newUser);
         userService.updateUser(newUser);
         return "redirect:/admin";
     }
@@ -88,8 +73,6 @@ public class MainController {
 
     @PostMapping("/admin/removeUser/{id}")
     public String removeUser(@ModelAttribute("iter") User user) {
-        System.out.println("Удаление пользователя");
-//        User deletedUser = userService.getUserById(user.getId());
         userService.removeUser(user);
         return "redirect:/admin";
     }
@@ -103,10 +86,7 @@ public class MainController {
 //    }
 
     @PostMapping ("/admin/updateUser/{id}")
-    public String updateUser(@ModelAttribute("iter") User user) {
-        System.out.println("Обновление пользователя");
-//        User user = userService.getUserById(id);
-//        model.addAttribute("user", user);
+    public String updateUser(@ModelAttribute("iter") User user) {;
         userService.updateUser(user);
         return "redirect:/admin";
     }
@@ -117,25 +97,25 @@ public class MainController {
 //        return "redirect:/admin";
 //    }
 
-    @GetMapping("/admin/changePassword/{id}")
-    public String changePassword(@PathVariable int id, ModelMap model) {
-        model.addAttribute("confirmPassword", new ConfirmPassword(id, userService.getUserById(id).getUsername()));
-        return "changePassword";
-    }
-
-    @GetMapping("/admin/changePassword/error")
-    public String changePassword(@RequestParam("id") int id, @ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
-        confirmPassword.setId(id);
-        confirmPassword.setUserName(userService.getUserById(id).getUsername());
-        return "passwordsDoNotMatch";
-    }
-
-    @PostMapping("/admin/changePassword")
-    public String changePassword(@ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
-        if (confirmPassword.getPassword().equals(confirmPassword.getConfirmPassword())) {
-            userService.updatePasswordById(confirmPassword.getId(), confirmPassword.getPassword());
-            return "redirect:/admin";
-        }
-        else return "redirect:/admin/changePassword/error?id=" + confirmPassword.getId();
-    }
+//    @GetMapping("/admin/changePassword/{id}")
+//    public String changePassword(@PathVariable int id, ModelMap model) {
+//        model.addAttribute("confirmPassword", new ConfirmPassword(id, userService.getUserById(id).getUsername()));
+//        return "changePassword";
+//    }
+//
+//    @GetMapping("/admin/changePassword/error")
+//    public String changePassword(@RequestParam("id") int id, @ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
+//        confirmPassword.setId(id);
+//        confirmPassword.setUserName(userService.getUserById(id).getUsername());
+//        return "passwordsDoNotMatch";
+//    }
+//
+//    @PostMapping("/admin/changePassword")
+//    public String changePassword(@ModelAttribute("confirmPassword") ConfirmPassword confirmPassword) {
+//        if (confirmPassword.getPassword().equals(confirmPassword.getConfirmPassword())) {
+//            userService.updatePasswordById(confirmPassword.getId(), confirmPassword.getPassword());
+//            return "redirect:/admin";
+//        }
+//        else return "redirect:/admin/changePassword/error?id=" + confirmPassword.getId();
+//    }
 }

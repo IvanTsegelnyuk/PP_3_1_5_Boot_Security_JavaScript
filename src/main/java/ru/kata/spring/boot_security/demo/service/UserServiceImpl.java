@@ -7,12 +7,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -31,9 +29,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void add(User user) {
-//        user.setRoles(Set.of(new Role(2)));
-        String role = user.getRolesAsInt();
-        user.setRoles(Set.of(new Role(Integer.parseInt(role))));
+//        String role = user.getRolesAsInt();
+//        user.setRoles(Set.of(new Role(Integer.parseInt(role))));
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.saveAndFlush(user);
     }
@@ -41,7 +38,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     @Transactional
     public void saveUser(User user) {
-//        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -51,13 +47,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
-
-
-//    @Override
-//    @Transactional
-//    public void updateUser(int id, String username, String email, String birthday) {
-//        userRepository.updateUserById(id, username, email, birthday);
-//    }
 
     @Override
     @Transactional
@@ -71,12 +60,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findUserByUsername(username);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        return userRepository.findUserByUsername(email);
     }
+
     @Override
     @Transactional
     public void updatePasswordById(int id, String password) {
