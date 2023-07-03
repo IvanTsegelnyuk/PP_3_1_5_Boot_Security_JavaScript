@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Query(value = "select u from User u left join fetch u.roles where u.username = :param")
     User findUserByUsername(@Param(value = "param") String username);
 
-    @Query(value = "update User set username=:username, email=:email, birthday=:birthday where id=:id")
+    @Query(value = "update User set username=:username, email=:email, LastName=:birthday where id=:id")
     @Modifying
     void updateUserById(@Param("id") int id, @Param("username") String username, @Param("email") String email, @Param("birthday") String birthday);
 

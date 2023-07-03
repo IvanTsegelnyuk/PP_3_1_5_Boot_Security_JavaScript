@@ -8,7 +8,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,7 +22,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column
-    private String birthday;
+    private String LastName;
 
     @Column
     private int age;
@@ -59,16 +58,16 @@ public class User implements UserDetails {
 
     private String confirmPassword;
 
-    public User(String name, String email, String birthday) {
+    public User(String name, String email, String LastName) {
         this.username = name;
         this.email = email;
-        this.birthday = birthday;
+        this.LastName = LastName;
     }
 
-    public User(int id, String email, String birthday, Set<Role> roles, String username, String password, String confirmPassword, int age) {
+    public User(int id, String email, String LastName, Set<Role> roles, String username, String password, String confirmPassword, int age) {
         this.id = id;
         this.email = email;
-        this.birthday = birthday;
+        this.LastName = LastName;
         this.roles = roles;
         this.username = username;
         this.password = password;
@@ -96,12 +95,12 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public String getBirthday() {
-        return birthday;
+    public String getLastName() {
+        return LastName;
     }
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
+    public void setLastName(String birthday) {
+        this.LastName = birthday;
     }
 
     public int getId() {

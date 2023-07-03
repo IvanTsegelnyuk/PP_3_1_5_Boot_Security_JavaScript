@@ -49,9 +49,10 @@
                         <thead class="border-top" style="text-align: center">
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Age</th>
                                 <th>Email</th>
-                                <th>Birthday</th>
                                 <th>Role</th>
                                 <th>Edit</th>
                                 <th>Delete</th>
@@ -61,11 +62,12 @@
                             <tr class="border-top" th:each="iter, iterStat : ${users}">
                                 <td th:text="${iter.getId()}"></td>
                                 <td th:text="${iter.getUsername()}"></td>
+                                <td th:text="${iter.getLastName()}"></td>
+                                <td th:text="${iter.getAge()}"></td>
                                 <td th:text="${iter.getEmail()}"></td>
-                                <td th:text="${iter.getBirthday()}"></td>
                                 <td th:text="${iter.printRoles()}"></td>
                                 <td><a type="button" class="btn text-white" data-bs-toggle="modal" th:data-bs-target="'#modal'+${iterStat.index}" style="background-color: #17a2b8">Edit</a>
-                                <div class="modal fade" th:id="'modal'+${iterStat.index}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal fade" style="font-weight: bold" th:id="'modal'+${iterStat.index}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
                                             <div class="modal-header">
@@ -82,28 +84,28 @@
                                                     <input class="form-control" type="text" th:value="${iter.getId()}" id="id" disabled/>
 
                                                     <div class="mb-3">
-                                                        <label for="userName" class="form-label">Username</label>
+                                                        <label for="userName" class="form-label">First Name</label>
                                                         <input type="text" class="form-control" th:name="username" th:value="${iter.getUsername()}" id="userName" placeholder="Username">
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label for="password" class="form-label">Password</label>
-                                                        <input type="password" class="form-control" th:name="password" th:value="${iter.getPassword()}" id="password" placeholder="Password">
+                                                        <label for="lastName" class="form-label">Last Name</label>
+                                                        <input type="text" class="form-control" th:name="lastName" th:value="${iter.getLastName()}" id="lastName" placeholder="last Name">
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <label for="age" class="form-label">age</label>
+                                                        <label for="age" class="form-label">Age</label>
                                                         <input type="number" class="form-control" th:name="age" th:value="${iter.getAge()}" id="age" placeholder="Age">
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <label for="birthday" class="form-label">Birthday</label>
-                                                        <input type="text" class="form-control" th:name="birthday" th:value="${iter.getBirthday()}"  id="birthday" placeholder="Birthday">
                                                     </div>
 
                                                     <div class="mb-3">
                                                         <label for="email" class="form-label">Email</label>
                                                         <input type="email" class="form-control" th:name="email" th:value="${iter.getEmail()}" id="email" placeholder="name@example.com">
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label for="password" class="form-label">Password</label>
+                                                        <input type="password" class="form-control" th:name="password" id="password" placeholder="Password">
                                                     </div>
 
                                                     <label for="roles" class="form-label">Roles</label>
@@ -149,7 +151,7 @@
 
                                                     <div class="mb-3">
                                                         <label for="delete_birthday" class="form-label">Birthday</label>
-                                                        <input type="text" class="form-control" th:name="birthday" th:value="${iter.getBirthday()}"  id="delete_birthday" disabled>
+                                                        <input type="text" class="form-control" th:name="birthday" th:value="${iter.getLastName()}" id="delete_birthday" disabled>
                                                     </div>
 
                                                     <div class="mb-3">
