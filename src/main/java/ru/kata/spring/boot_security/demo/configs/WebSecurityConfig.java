@@ -33,7 +33,10 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/admin/**").hasRole("ADMIN"))
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/user/**").hasAnyRole("ADMIN", "USER"))
                 .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/").authenticated())
-                .formLogin(x -> x.successHandler(successHandler));
+                .authorizeHttpRequests((authorize) -> authorize.requestMatchers("/**").permitAll())
+//                .authorizeHttpRequests((authorize) -> authorize.anyRequest().permitAll())
+                .formLogin(x -> x.successHandler(successHandler))
+                .csrf(csrf -> csrf.disable());
         return http.build();
     }
 

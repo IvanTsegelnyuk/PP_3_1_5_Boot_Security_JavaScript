@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <title></title>
+</head>
+<body>
+
+<!--Первая строка - Заголовок-->
+
+<div class="container-fluid">
+    <div class="row" style="height: 50px">
+        <div class="d-flex align-items-center justify-content-start col-10" style="background-color: #212529">
+            <p id="loginUserInfo" style="color: white; font-size: large; font-weight: bold; margin-bottom: 0"></p>
+        </div>
+        <div class="d-flex align-items-center justify-content-end col-2" style="background-color: #212529">
+<!--            <a href="/logout" style="text-decoration: none"><span style="color: #8b959b">Logout</span></a>-->
+            <form method="post" th:action="@{/logout}">
+                <button class="btn" type="submit" style="text-decoration: none; background-color: #212529"><span style="color: #8b959b">Logout</span></button>
+            </form>
+        </div>
+    </div>
+    <div class="row" style="height: 100vh">
+        <div class="col-1" style="padding-left: 0; padding-right: 0; padding-top: 15px">
+            <div class="d-grid gap-2">
+                <button class="btn btn-primary" style="text-align: left" type="button">Admin</button>
+                <button class="btn btn text-primary" style="text-align: left" type="button" th:onclick="|window.location.href='@{/user}'|" >User</button>
+            </div>
+        </div>
+        <div class="col-11" style="background-color: #f8f9fa; padding-left: 50px; padding-top: 10px; padding-right: 50px">
+            <p id="adminPanel" style="font-size: 40px; font-weight: 500"></p>
+
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-tab="#tab_1" aria-current="page" href="#users-table">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-tab="#tab_2" href="#new-user">New User</a>
+                </li>
+            </ul>
+
+            <div id="tab_1" class="tab-content container-fluid border border-light-subtle" style="padding: 0">
+                <div class="row" style="padding: 15px">
+                    <p style="font-size: 20px; font-weight: 500; margin-bottom: 0">All users</p>
+                </div>
+                <div class="container-fluid border border-light-subtle bg-white" style="padding: 20px">
+                    <table id="mainTable" class="table table-striped table-borderless bg-white">
+                        <thead class="border-top" style="text-align: center">
+                            <tr>
+                                <th>ID</th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Age</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody" style="text-align: center">
+
+                        </tbody>
+                    </table>
+                </div>
+<!--                <div class="modal fade" style="font-weight: bold" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                    <div class="modal-dialog">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header">-->
+<!--                                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>-->
+<!--                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                            </div>-->
+<!--                                <form id="modalForm">-->
+
+<!--                                    <div class="col-md" style="padding-left: 100px; padding-right: 100px">-->
+
+<!--                                    <input type="hidden" id="modalHiddenId"/>-->
+
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="modalUsername" class="form-label">First Name</label>-->
+<!--                                        <input name="username" type="text" class="form-control" id="modalUsername" placeholder="First Name">-->
+<!--                                    </div>-->
+
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="modalLastName" class="form-label">Last Name</label>-->
+<!--                                        <input name="lastName" type="text" class="form-control" id="modalLastName" placeholder="Last Name">-->
+<!--                                    </div>-->
+
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="modalAge" class="form-label">Age</label>-->
+<!--                                        <input name="age" type="number" class="form-control" id="modalAge" placeholder="Age">-->
+<!--                                    </div>-->
+
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="modalEmail" class="form-label">Email</label>-->
+<!--                                        <input name="email" type="email" class="form-control" id="modalEmail" placeholder="name@example.com">-->
+<!--                                    </div>-->
+
+<!--                                    <div class="mb-3">-->
+<!--                                        <label for="modalPassword" class="form-label">Password</label>-->
+<!--                                        <input name="password" type="password" class="form-control" id="modalPassword" placeholder="Password">-->
+<!--                                    </div>-->
+
+<!--                                    <label for="modalRoles" class="form-label">Roles</label>-->
+<!--                                    <select name="roles" class="form-select" size="2" style="margin-bottom: 20px" aria-label="size 3 select example" id="modalRoles" multiple>-->
+<!--                                        <option class="selectedOption" selected value="0">Admin</option>-->
+<!--                                        <option class="selectedOption" selected value="1">User</option>-->
+<!--                                    </select>-->
+
+<!--                                    <button type="submit" class="btn btn-primary">Save changes</button>-->
+
+<!--                                    </div>-->
+
+<!--                                </form>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+            </div>
+            <div id="tab_2" class="tab-content container-fluid border border-light-subtle" style="padding: 0; display: none">
+                <div class="row" style="padding: 15px">
+                    <p style="font-size: 20px; font-weight: 500; margin-bottom: 0">Add new user</p>
+                </div>
+                <div class="container-fluid border border-light-subtle bg-white" style="padding: 20px">
+                    <div class="row">
+                        <div class="col-4">
+                        </div>
+                        <div class="col-4 text-center"  style="margin: 0; font-weight: bold">
+                            <form id="newUserForm">
+
+                                <input type="hidden" id="id"/>
+
+                                <div class="mb-3">
+                                    <label for="username" class="form-label">First Name</label>
+                                    <input name="username" type="text" class="form-control" id="username" placeholder="First Name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="lastNameId" class="form-label">Last Name</label>
+                                    <input name="lastName" type="text" class="form-control" id="lastNameId" placeholder="Last Name">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="ageId" class="form-label">Age</label>
+                                    <input name="age" type="number" class="form-control" id="ageId" placeholder="Age">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="emailId" class="form-label">Email</label>
+                                    <input name="email" type="email" class="form-control" id="emailId" placeholder="name@example.com">
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="passwordId" class="form-label">Password</label>
+                                    <input name="password" type="password" class="form-control" id="passwordId" placeholder="Password">
+                                </div>
+
+                                <label for="rolesId" class="form-label">Roles</label>
+                                <select name="roles" class="form-select" size="2" style="margin-bottom: 20px" aria-label="size 3 select example" id="rolesId" multiple>
+                                    <option class="selectedOption" selected value="0">Admin</option>
+                                    <option class="selectedOption" selected value="1">User</option>
+                                </select>
+
+                                <input type="submit" id="addUserBtn" class="btn btn-success" value="Add new user"/>
+
+                            </form>
+                        </div>
+                        <div class="col-4">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="modal fade" style="font-weight: bold" tabindex="-1" aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabelDelete">Delete user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form >
+
+                <div class="col-md" style="padding-left: 100px; padding-right: 100px">
+
+                    <label for="delete_id" class="form-label">Id</label>
+                    <input class="form-control" type="text" value="123" id="delete_id" disabled/>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous">
+</script>
+<script type="text/javascript" src="../static/app.js"></script>
+
+<script src="../static/app.js"></script>
+</body>
+</html>

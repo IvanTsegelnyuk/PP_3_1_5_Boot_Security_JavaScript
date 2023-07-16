@@ -98,6 +98,16 @@ public class User implements UserDetails {
         return sb.toString().trim();
     }
 
+    @Override
+    public String toString() {
+        return getUsername() + " "
+                + getLastName() + " "
+                + getAge() + " "
+                + getEmail() + " "
+                + getPassword() + " "
+                + getRoles();
+    }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
