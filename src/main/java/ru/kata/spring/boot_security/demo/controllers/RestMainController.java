@@ -36,6 +36,12 @@ public class RestMainController {
         userService.deleteUser(id);
     }
 
+    @PutMapping("/edit")
+    public void updateUser(@RequestBody User user) {
+        System.out.println(user);
+        userService.updateUser(user);
+    }
+
     @PostMapping("/users")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
         System.out.println(user);

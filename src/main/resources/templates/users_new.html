@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="col-11" style="background-color: #f8f9fa; padding-left: 50px; padding-top: 10px; padding-right: 50px">
-            <p id="adminPanel" style="font-size: 40px; font-weight: 500"></p>
+            <p id="adminPanel" style="font-size: 40px; font-weight: 500">Admin panel</p>
 
             <ul class="nav nav-tabs">
                 <li class="nav-item">
@@ -128,6 +128,7 @@
                         <div class="col-4">
                         </div>
                         <div class="col-4 text-center"  style="margin: 0; font-weight: bold">
+<!--New User Form-->
                             <form id="newUserForm">
 
                                 <input type="hidden" id="id"/>
@@ -159,8 +160,8 @@
 
                                 <label for="rolesId" class="form-label">Roles</label>
                                 <select name="roles" class="form-select" size="2" style="margin-bottom: 20px" aria-label="size 3 select example" id="rolesId" multiple>
-                                    <option class="selectedOption" selected value="0">Admin</option>
-                                    <option class="selectedOption" selected value="1">User</option>
+                                    <option class="selectedOption" value="0">Admin</option>
+                                    <option class="selectedOption" value="1">User</option>
                                 </select>
 
                                 <input type="submit" id="addUserBtn" class="btn btn-success" value="Add new user"/>
@@ -177,30 +178,115 @@
 </div>
 
 
+<!--Edit modal-->
+<div class="modal fade" id="editModal" style="font-weight: bold" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <form id="editForm">
+
+                    <div class="col-md" style="padding-left: 100px; padding-right: 100px">
+
+                        <div class="mb-3">
+                            <label for="edit_id" class="form-label">ID</label>
+                            <input name="id" type="text" class="form-control" id="edit_id" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_userName" class="form-label">First Name</label>
+                            <input name="username" type="text" class="form-control" id="edit_userName" placeholder="First Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_lastName" class="form-label">Last Name</label>
+                            <input name="lastName" type="text" class="form-control" id="edit_lastName" placeholder="Last Name">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_age" class="form-label">Age</label>
+                            <input name="age" type="number" class="form-control" id="edit_age" placeholder="Age">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_email" class="form-label">Email</label>
+                            <input name="email" type="email" class="form-control" id="edit_email" placeholder="name@example.com">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="edit_password" class="form-label">Password</label>
+                            <input name="password" type="password" class="form-control" id="edit_password" placeholder="Password">
+                        </div>
+
+                        <label for="edit_roles" class="form-label">Roles</label>
+                        <select name="roles" class="form-select" size="2" style="margin-bottom: 20px" aria-label="size 3 select example" id="edit_roles" multiple>
+                            <option class="selectedOption" selected value="0">Admin</option>
+                            <option class="selectedOption" selected value="1">User</option>
+                        </select>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button id="editModalCloseBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Edit</button>
+                    </div>
+
+                </form>
+
+        </div>
+    </div>
+</div>
 
 
 
-
-
-<div class="modal fade" style="font-weight: bold" tabindex="-1" aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
+<!--Delete modal-->
+<div class="modal fade" data-myAttr="modal" style="font-weight: bold" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabelDelete" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabelDelete">Delete user</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form >
+            <form id="deleteForm">
 
                 <div class="col-md" style="padding-left: 100px; padding-right: 100px">
 
                     <label for="delete_id" class="form-label">Id</label>
-                    <input class="form-control" type="text" value="123" id="delete_id" disabled/>
+                    <input class="form-control" type="text" name="id" id="delete_id" readonly/>
+
+                    <div class="mb-3">
+                        <label for="delete_userName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" name="username" id="delete_userName" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="delete_lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" name="lastName" id="delete_lastName" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="delete_age" class="form-label">Age</label>
+                        <input type="number" class="form-control" name="age" id="delete_age" placeholder="Age" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="delete_email" class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" id="delete_email" readonly>
+                    </div>
+
+                    <label for="delete_roles" class="form-label">Roles</label>
+                    <select class="form-select" size="2" style="margin-bottom: 20px" aria-label="size 3 select example" id="delete_roles" readonly>
+                        <option class="selectedOption1" selected value="0" readonly="">Admin</option>
+                        <option class="selectedOption1" selected value="1" readonly="">User</option>
+                    </select>
 
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Delete</button>
+                    <button id="closeBtn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button id="submitDeleteBtn" type="submit" class="btn btn-primary" data-bs-dismiss="modal">Delete</button>
                 </div>
             </form>
         </div>
@@ -215,5 +301,6 @@
 <script type="text/javascript" src="../static/app.js"></script>
 
 <script src="../static/app.js"></script>
+<!--<div id="modalBackdoor"></div>-->
 </body>
 </html>
