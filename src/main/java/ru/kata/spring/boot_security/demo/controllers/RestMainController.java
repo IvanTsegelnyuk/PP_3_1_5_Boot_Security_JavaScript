@@ -11,12 +11,10 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.lang.reflect.Array;
 import java.util.List;
-import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/")
 public class RestMainController {
 
     @Autowired
@@ -24,45 +22,39 @@ public class RestMainController {
     @Autowired
     RoleService roleService;
 
-    @GetMapping("/users")
-    public ResponseEntity<List<User>> getAllUsers(ModelMap model, @AuthenticationPrincipal User user) {
+    @GetMapping("api/users")
+    public ResponseEntity<List<User>> getAllUsers() {
         List<User> list = userService.getAllUsers();
         ResponseEntity<List<User>> responseEntity = new ResponseEntity<>(list, HttpStatus.OK);
         return responseEntity;
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("api/delete/{id}")
     public void deleteUser(@PathVariable Integer id) {
+        System.out.println("Удаление пользователя");
         userService.deleteUser(id);
     }
 
-    @PutMapping("/edit")
+    @PutMapping("api/edit")
     public void updateUser(@RequestBody User user) {
-        System.out.println(user);
         userService.updateUser(user);
     }
 
-    @PostMapping("/users")
+    @PostMapping("api/users")
     public ResponseEntity<User> createNewUser(@RequestBody User user) {
-        System.out.println(user);
-        System.out.println(user.getRoles());
-//        System.out.println(user.getRoles());
         userService.saveUser(user);
         ResponseEntity<User> responseEntity = new ResponseEntity<>(user, HttpStatus.OK);
-        System.out.println(responseEntity);
         return responseEntity;
     }
 
 
-    @GetMapping("/loginUser")
+    @GetMapping("api/loginUser")
     public ResponseEntity<User> getAuthenticatedUser(@AuthenticationPrincipal User user) {
         ResponseEntity<User> responseEntity = new ResponseEntity<>(user, HttpStatus.OK);
-        System.out.println("Авторизованный юзер: " + user);
-        System.out.println(responseEntity);
         return responseEntity;
     }
 
-    @GetMapping("/roles")
+    @GetMapping("api/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
         ResponseEntity<List<Role>> roles = new ResponseEntity<>(roleService.getAllRoles(), HttpStatus.OK);
         return roles;

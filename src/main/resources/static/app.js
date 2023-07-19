@@ -1,87 +1,140 @@
-const mainTable = document.getElementById("mainTable");
+const myMainTable = document.getElementById("mainTable");
 const tableBody = document.getElementById("tableBody");
-const adminPanel = document.getElementById("adminPanel");
 const loginUserInfo = document.getElementById("loginUserInfo");
-// adminPanel.innerHTML='Admin panel';
 
-async function getAllUsers() {
-    const result = await fetch ('http://localhost:8080/api/users')
-    return result.json()
-}
+
+const adminBtn = document.getElementById("adminBtn");
+const userBtn = document.getElementById("userBtn");
+const adminPanel = document.getElementById("adminPanel");
+const userInformationPanel = document.getElementById("userInformationPanel");
+
+userBtn.addEventListener("click", async() => {
+    userBtn.setAttribute("class", "btn btn-primary");
+    adminBtn.setAttribute("class", "btn text-primary");
+    adminPanel.style.display="none";
+    userInformationPanel.style.display="";
+
+    const loginUser = await getLoginUser();
+    const userData = document.querySelectorAll(".usersData");
+    userData[0].innerText=loginUser.id;
+    userData[1].innerText=loginUser.username;
+    userData[2].innerText=loginUser.lastName;
+    userData[3].innerText=loginUser.age;
+    userData[4].innerText=loginUser.email;
+    const array = [];
+    for(let i = 0; i < loginUser.roles.length; i++) {
+        array.push(loginUser.roles[i].simpleName);
+    }
+    userData[5].innerText = `${array.sort().join(' ')}`;
+
+});
+
+adminBtn.addEventListener("click", () => {
+    adminBtn.setAttribute("class", "btn btn-primary");
+    userBtn.setAttribute("class", "btn text-primary");
+    adminPanel.style.display="";
+    userInformationPanel.style.display="none";
+})
 
 async function buildUserTable() {
 
-    await fetch('http://localhost:8080/api/users')
-        .then(res => res.json())
-        .then(data => {
-            console.log(data)
-            const usersCount = data.length
-            for (let i = 0; i < usersCount; i++) {
-                const newTableRow = document.createElement("tr");
-                newTableRow.classList.add("mainTableTr");
-                for (let j = 0; j < mainTable.rows[0].cells.length; j++) {
-                    newTableRow.appendChild(document.createElement("td"))
-                }
-                tableBody.appendChild(newTableRow)
-            }
+    const user = await getLoginUser();
+    let admin = false;
+    user.roles.forEach((iter) => {
+        if (iter.name === "ROLE_ADMIN") {
+            admin = true;
+        }
+    })
 
-            for (let i = 1; i < mainTable.rows.length; i++) {
-                const currentRowUser = data[i-1];
-                // список ролей пользователя
-                const array = []
-                currentRowUser.roles.forEach((item) => {
-                    array.push(item.simpleName);
-                })
-                //
-                const deleteBtn = document.createElement("a");
-                deleteBtn.setAttribute("type", "button");
-                deleteBtn.setAttribute("class", "btn btn-danger");
-                deleteBtn.setAttribute("data-bs-toggle", "modal");
-                deleteBtn.setAttribute("data-bs-target", "#deleteModal");
-                deleteBtn.innerText='Delete';
-                deleteBtn.addEventListener("click",() => {
-                    const inputId = document.querySelector("[id=delete_id]");
-                    inputId.setAttribute("value", currentRowUser.id);
-                    const inputName = document.querySelector("[id=delete_userName]");
-                    inputName.setAttribute("value", currentRowUser.username);
-                    const inputLastName = document.querySelector("[id=delete_lastName]");
-                    inputLastName.setAttribute("value", currentRowUser.lastName);
-                    const inputAge = document.querySelector("[id=delete_age]");
-                    inputAge.setAttribute("value", currentRowUser.age);
-                    const inputEmail = document.querySelector("[id=delete_email]");
-                    inputEmail.setAttribute("value", currentRowUser.email);
-                });
-                const editBtn = document.createElement("button");
-                editBtn.setAttribute("type", "button");
-                editBtn.setAttribute("class", "btn text-white");
-                editBtn.setAttribute("data-bs-toggle", "modal");
-                editBtn.setAttribute("data-bs-target", "#editModal");
-                editBtn.style.backgroundColor="#17a2b8";
-                editBtn.innerText='Edit';
-                editBtn.addEventListener("click", () => {
-                    const inputId = document.querySelector("[id=edit_id]");
-                    inputId.setAttribute("value", currentRowUser.id);
-                    const inputName = document.querySelector("[id=edit_userName]");
-                    inputName.setAttribute("value", currentRowUser.username);
-                    const inputLastName = document.querySelector("[id=edit_lastName]");
-                    inputLastName.setAttribute("value", currentRowUser.lastName);
-                    // console.log(inputLastName);
-                    const inputAge = document.querySelector("[id=edit_age]");
-                    inputAge.setAttribute("value", currentRowUser.age);
-                    const inputEmail = document.querySelector("[id=edit_email]");
-                    inputEmail.setAttribute("value", currentRowUser.email);
-                });
-                mainTable.rows[i].cells[0].innerHTML = currentRowUser.id;
-                mainTable.rows[i].cells[1].innerHTML = currentRowUser.username;
-                mainTable.rows[i].cells[2].innerHTML = currentRowUser.lastName;
-                mainTable.rows[i].cells[3].innerHTML = currentRowUser.age;
-                mainTable.rows[i].cells[4].innerHTML = currentRowUser.email;
-                mainTable.rows[i].cells[5].innerHTML = array.sort().join(' ');
-                mainTable.rows[i].cells[6].appendChild(editBtn);
-                mainTable.rows[i].cells[7].appendChild(deleteBtn);
-            }
+    const array = [];
+    for(let i = 0; i < user.roles.length; i++) {
+        array.push(user.roles[i].simpleName);
+    }
+    loginUserInfo.innerText = `${user.email} with roles: ${array.sort().join(' ')}`;
+
+    if (admin) {
+
+        await fetch('http://localhost:8080/api/users')
+            .then(res => res.json())
+            .then(data => {
+                // console.log(data)
+                const usersCount = data.length
+                for (let i = 0; i < usersCount; i++) {
+                    const newTableRow = document.createElement("tr");
+                    newTableRow.classList.add("mainTableTr");
+                    for (let j = 0; j < myMainTable.rows[0].cells.length; j++) {
+                        newTableRow.appendChild(document.createElement("td"))
+                    }
+                    tableBody.appendChild(newTableRow)
+                }
+
+                for (let i = 1; i < myMainTable.rows.length; i++) {
+                    const currentRowUser = data[i - 1];
+                    // список ролей пользователя
+                    const array = []
+                    currentRowUser.roles.forEach((item) => {
+                        array.push(item.simpleName);
+                    })
+                    //
+                    const deleteBtn = document.createElement("a");
+                    deleteBtn.setAttribute("type", "button");
+                    deleteBtn.setAttribute("class", "btn btn-danger");
+                    deleteBtn.setAttribute("data-bs-toggle", "modal");
+                    deleteBtn.setAttribute("data-bs-target", "#deleteModal");
+                    deleteBtn.innerText = 'Delete';
+                    deleteBtn.addEventListener("click", () => {
+                        const inputId = document.querySelector("[id=delete_id]");
+                        inputId.setAttribute("value", currentRowUser.id);
+                        const inputName = document.querySelector("[id=delete_userName]");
+                        inputName.setAttribute("value", currentRowUser.username);
+                        const inputLastName = document.querySelector("[id=delete_lastName]");
+                        inputLastName.setAttribute("value", currentRowUser.lastName);
+                        const inputAge = document.querySelector("[id=delete_age]");
+                        inputAge.setAttribute("value", currentRowUser.age);
+                        const inputEmail = document.querySelector("[id=delete_email]");
+                        inputEmail.setAttribute("value", currentRowUser.email);
+                    });
+                    const editBtn = document.createElement("button");
+                    editBtn.setAttribute("type", "button");
+                    editBtn.setAttribute("class", "btn text-white");
+                    editBtn.setAttribute("data-bs-toggle", "modal");
+                    editBtn.setAttribute("data-bs-target", "#editModal");
+                    editBtn.style.backgroundColor = "#17a2b8";
+                    editBtn.innerText = 'Edit';
+                    editBtn.addEventListener("click", () => {
+                        const inputId = document.querySelector("[id=edit_id]");
+                        inputId.setAttribute("value", currentRowUser.id);
+                        const inputName = document.querySelector("[id=edit_userName]");
+                        inputName.setAttribute("value", currentRowUser.username);
+                        const inputLastName = document.querySelector("[id=edit_lastName]");
+                        inputLastName.setAttribute("value", currentRowUser.lastName);
+                        const inputAge = document.querySelector("[id=edit_age]");
+                        inputAge.setAttribute("value", currentRowUser.age);
+                        const inputEmail = document.querySelector("[id=edit_email]");
+                        inputEmail.setAttribute("value", currentRowUser.email);
+                    });
+                    myMainTable.rows[i].cells[0].innerHTML = currentRowUser.id;
+                    myMainTable.rows[i].cells[1].innerHTML = currentRowUser.username;
+                    myMainTable.rows[i].cells[2].innerHTML = currentRowUser.lastName;
+                    myMainTable.rows[i].cells[3].innerHTML = currentRowUser.age;
+                    myMainTable.rows[i].cells[4].innerHTML = currentRowUser.email;
+                    myMainTable.rows[i].cells[5].innerHTML = array.sort().join(' ');
+                    myMainTable.rows[i].cells[6].appendChild(editBtn);
+                    myMainTable.rows[i].cells[7].appendChild(deleteBtn);
+                }
+            })
+    } else {
+        const onlyAdmin = document.querySelectorAll(".only-admin");
+        onlyAdmin.forEach((iter) => {
+            iter.style.display="none";
         })
+        userInformationPanel.style.display="";
+        userBtn.click();
+    }
 }
+
+
+buildUserTable();
 
 const editForm = document.getElementById("editForm");
 
@@ -109,10 +162,7 @@ editForm.addEventListener("submit", async (e) => {
         body: JSON.stringify(obj)
     })
 
-    const allTr = document.querySelectorAll(".mainTableTr");
-    allTr.forEach((item) => {
-        item.remove()
-    })
+    deleteTable();
     await buildUserTable();
 })
 
@@ -131,24 +181,14 @@ deleteForm.addEventListener("submit", async (e) => {
 
     }
 
-    const allTr = document.querySelectorAll(".mainTableTr");
-    allTr.forEach((item) => {
-        item.remove()
-    })
+    deleteTable();
     await buildUserTable();
 })
 
-
-
-fetch('http://localhost:8080/api/loginUser')
-    .then(res => res.json())
-    .then(data => {
-        const array = [];
-        for(let i = 0; i < data.roles.length; i++) {
-            array.push(data.roles[i].simpleName);
-        }
-        loginUserInfo.innerText = `${data.email} with roles: ${array.sort().join(' ')}`
-    })
+async function getLoginUser() {
+    const result = await fetch('http://localhost:8080/api/loginUser');
+    return result.json();
+}
 
 
 const horizontals = document.querySelectorAll(".nav-link");
@@ -178,7 +218,7 @@ const newUserForm = document.querySelector("#newUserForm")
 
 
 async function getAllRoles() {
-    const result = await fetch('http://localhost:8080/api/roles')
+    const result = await fetch('http://localhost:8080/api/roles');
     return result.json()
 }
 
@@ -209,10 +249,7 @@ async function createNewUser(e) {
 
     }
 
-    const allTr = document.querySelectorAll(".mainTableTr");
-    allTr.forEach((item) => {
-        item.remove()
-    })
+    deleteTable();
 }
 const nav1 = document.querySelector("[data-tab='#tab_1']");
 const nav2 = document.querySelector("[data-tab='#tab_2']");
@@ -230,5 +267,9 @@ newUserForm.addEventListener("submit", async (e) => {
     await buildUserTable();
 });
 
-
-buildUserTable();
+function deleteTable() {
+    const allTr = document.querySelectorAll(".mainTableTr");
+    allTr.forEach((item) => {
+        item.remove()
+    });
+}
